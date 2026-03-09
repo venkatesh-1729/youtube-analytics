@@ -1,0 +1,11 @@
+Given a script, for each scene, generate a image generation prompt and the video generation prompt. The image & video prompts should be consistent. Each prompt will be used independently so make sure each prompt is self sufficient. Also, image prompt should talk about the static scene and talk about all the objects / subjects that need to be there in the image. Video prompt will only talk about the objects / subjects talked by the image prompt and the background prompt should also tell how the scene should be there. Video prompt shouldn't talk about easy motions that can be generated in video editors like zoom in zoom out etc but only actions by subjects or environment etc. Don't include style information in the prompts as it'll be added separately on top of the given prompts. Images should be at eye level, medium shot so that we can see the scene and the subjects clearly. Make the prompt as detailed as possible so we can geenrate the scene proplery.
+
+Scenes:
+Anjali finishes her shower and stands in front of the mirror, combing her hair.
+Suddenly, the electricity goes out.
+Anjali lights a candle and looks into the mirror again.
+She sees a dark silhouette standing behind her in the mirror and gets scared.
+She turns around quickly to check behind her, but no one is there.
+She sighs in relief ("Hammayya") and looks back at the mirror.
+The Twist: While Anjali is facing the mirror, her reflection is still turned around (showing its back).
+Anjali looks petrified/her heart skips a beat.

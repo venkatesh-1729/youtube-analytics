@@ -413,6 +413,7 @@ def fetch_transcript(video_id: str) -> str:
     """Fetch transcript for a single video using youtube-transcript-api.
 
     No auth required. Returns plain text; empty string if unavailable.
+    Supports both v0.x (class methods) and v1.x (instance methods) APIs.
 
     Args:
         video_id: YouTube video ID.
@@ -426,21 +427,32 @@ def fetch_transcript(video_id: str) -> str:
         logger.warning("youtube-transcript-api not installed; skipping transcript fetch")
         return ""
 
-    try:
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-        # Prefer manual, fall back to auto-generated
-        transcript = None
-        try:
-            transcript = transcript_list.find_manually_created_transcript(["te", "en"])
-        except Exception:
-            try:
-                transcript = transcript_list.find_generated_transcript(["te", "en"])
-            except Exception:
-                pass
+    # Preferred languages: Telugu first, then English
+    languages = ["te", "en"]
 
-        if transcript:
-            entries = transcript.fetch()
-            return " ".join(e.get("text", "") for e in entries if e.get("text"))
+    try:
+        # v1.x API: instance-based with .fetch() and .list()
+        api = YouTubeTranscriptApi()
+        transcript = api.fetch(video_id, languages=languages)
+        # transcript is a FetchedTranscript with snippet objects
+        return " ".join(
+            snippet.text for snippet in transcript if snippet.text
+        )
+    except TypeError:
+        # v0.x fallback: class method API
+        try:
+            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            transcript = None
+            try:
+                transcript = transcript_list.find_manually_created_transcript(languages)
+            except Exception:
+                transcript = transcript_list.find_generated_transcript(languages)
+
+            if transcript:
+                entries = transcript.fetch()
+                return " ".join(e.get("text", "") for e in entries if e.get("text"))
+        except Exception as e:
+            logger.debug("Transcript not available for %s: %s", video_id, e)
     except Exception as e:
         logger.debug("Transcript not available for %s: %s", video_id, e)
 
