@@ -1,40 +1,52 @@
 {
-  "last_refreshed": "2026-03-09T12:00:14.096235",
+  "last_refreshed": "2026-03-11T09:01:23.176172",
+  "channel_totals": [
+    {
+      "views": 31325993,
+      "estimatedMinutesWatched": 9029469,
+      "subscribersGained": 66561,
+      "subscribersLost": 3551,
+      "likes": 656282,
+      "dislikes": 17046,
+      "comments": 1757,
+      "shares": 325008
+    }
+  ],
   "traffic_sources": [
     {
       "insightTrafficSourceType": "SHORTS",
-      "views": 24530822,
-      "estimatedMinutesWatched": 6299901
+      "views": 26772908,
+      "estimatedMinutesWatched": 6819231
     },
     {
       "insightTrafficSourceType": "SUBSCRIBER",
-      "views": 2044689,
-      "estimatedMinutesWatched": 1334500
+      "views": 2117038,
+      "estimatedMinutesWatched": 1422510
     },
     {
       "insightTrafficSourceType": "YT_CHANNEL",
-      "views": 1073815,
-      "estimatedMinutesWatched": 249873
+      "views": 1137209,
+      "estimatedMinutesWatched": 266136
     },
     {
       "insightTrafficSourceType": "YT_SEARCH",
-      "views": 697724,
-      "estimatedMinutesWatched": 169109
+      "views": 739556,
+      "estimatedMinutesWatched": 177626
     },
     {
       "insightTrafficSourceType": "EXT_URL",
-      "views": 261861,
-      "estimatedMinutesWatched": 128281
+      "views": 291511,
+      "estimatedMinutesWatched": 143821
     },
     {
       "insightTrafficSourceType": "RELATED_VIDEO",
-      "views": 69885,
-      "estimatedMinutesWatched": 98648
+      "views": 73681,
+      "estimatedMinutesWatched": 109686
     },
     {
       "insightTrafficSourceType": "YT_OTHER_PAGE",
-      "views": 61758,
-      "estimatedMinutesWatched": 34317
+      "views": 66973,
+      "estimatedMinutesWatched": 37463
     },
     {
       "insightTrafficSourceType": "ADVERTISING",
@@ -43,47 +55,47 @@
     },
     {
       "insightTrafficSourceType": "SHORTS_CONTENT_LINKS",
-      "views": 31659,
-      "estimatedMinutesWatched": 19683
+      "views": 33843,
+      "estimatedMinutesWatched": 24470
     },
     {
       "insightTrafficSourceType": "PLAYLIST",
-      "views": 19368,
-      "estimatedMinutesWatched": 8706
+      "views": 20453,
+      "estimatedMinutesWatched": 9218
     },
     {
       "insightTrafficSourceType": "SOUND_PAGE",
-      "views": 8044,
-      "estimatedMinutesWatched": 2295
+      "views": 8676,
+      "estimatedMinutesWatched": 2479
     },
     {
       "insightTrafficSourceType": "NOTIFICATION",
-      "views": 5073,
-      "estimatedMinutesWatched": 2638
+      "views": 5624,
+      "estimatedMinutesWatched": 3022
     },
     {
       "insightTrafficSourceType": "NO_LINK_OTHER",
-      "views": 4040,
-      "estimatedMinutesWatched": 7255
+      "views": 4296,
+      "estimatedMinutesWatched": 7808
     },
     {
       "insightTrafficSourceType": "HASHTAGS",
-      "views": 2832,
-      "estimatedMinutesWatched": 714
+      "views": 3082,
+      "estimatedMinutesWatched": 780
     },
     {
       "insightTrafficSourceType": "END_SCREEN",
-      "views": 236,
-      "estimatedMinutesWatched": 1047
+      "views": 299,
+      "estimatedMinutesWatched": 1400
     },
     {
       "insightTrafficSourceType": "ANNOTATION",
-      "views": 77,
-      "estimatedMinutesWatched": 173
+      "views": 81,
+      "estimatedMinutesWatched": 196
     },
     {
       "insightTrafficSourceType": "IMMERSIVE_LIVE",
-      "views": 74,
+      "views": 76,
       "estimatedMinutesWatched": 17
     },
     {
@@ -92,212 +104,476 @@
       "estimatedMinutesWatched": 0
     }
   ],
+  "top_search_terms": [
+    {
+      "insightTrafficSourceDetail": "shorts",
+      "views": 15003,
+      "estimatedMinutesWatched": 4798
+    },
+    {
+      "insightTrafficSourceDetail": "telugu sampada",
+      "views": 10724,
+      "estimatedMinutesWatched": 3093
+    },
+    {
+      "insightTrafficSourceDetail": "bommalu",
+      "views": 5339,
+      "estimatedMinutesWatched": 1316
+    },
+    {
+      "insightTrafficSourceDetail": "cat videos",
+      "views": 4957,
+      "estimatedMinutesWatched": 852
+    },
+    {
+      "insightTrafficSourceDetail": "monkey video",
+      "views": 3641,
+      "estimatedMinutesWatched": 598
+    },
+    {
+      "insightTrafficSourceDetail": "cow videos",
+      "views": 3578,
+      "estimatedMinutesWatched": 543
+    },
+    {
+      "insightTrafficSourceDetail": "songs",
+      "views": 3309,
+      "estimatedMinutesWatched": 902
+    },
+    {
+      "insightTrafficSourceDetail": "telugu songs",
+      "views": 3115,
+      "estimatedMinutesWatched": 827
+    },
+    {
+      "insightTrafficSourceDetail": "videos",
+      "views": 2517,
+      "estimatedMinutesWatched": 744
+    },
+    {
+      "insightTrafficSourceDetail": "songs telugu",
+      "views": 2483,
+      "estimatedMinutesWatched": 663
+    },
+    {
+      "insightTrafficSourceDetail": "youtube",
+      "views": 2262,
+      "estimatedMinutesWatched": 676
+    },
+    {
+      "insightTrafficSourceDetail": "jokes",
+      "views": 2249,
+      "estimatedMinutesWatched": 651
+    },
+    {
+      "insightTrafficSourceDetail": "dog videos",
+      "views": 2220,
+      "estimatedMinutesWatched": 403
+    },
+    {
+      "insightTrafficSourceDetail": "telugu shorts",
+      "views": 2173,
+      "estimatedMinutesWatched": 590
+    },
+    {
+      "insightTrafficSourceDetail": "telugu stories",
+      "views": 2086,
+      "estimatedMinutesWatched": 628
+    },
+    {
+      "insightTrafficSourceDetail": "cartoon",
+      "views": 1997,
+      "estimatedMinutesWatched": 413
+    },
+    {
+      "insightTrafficSourceDetail": "kids videos for kids",
+      "views": 1692,
+      "estimatedMinutesWatched": 312
+    },
+    {
+      "insightTrafficSourceDetail": "stories in telugu",
+      "views": 1605,
+      "estimatedMinutesWatched": 495
+    },
+    {
+      "insightTrafficSourceDetail": "reels",
+      "views": 1512,
+      "estimatedMinutesWatched": 425
+    },
+    {
+      "insightTrafficSourceDetail": "fish video",
+      "views": 1405,
+      "estimatedMinutesWatched": 261
+    },
+    {
+      "insightTrafficSourceDetail": "shorts in telugu",
+      "views": 1386,
+      "estimatedMinutesWatched": 419
+    },
+    {
+      "insightTrafficSourceDetail": "train videos",
+      "views": 1380,
+      "estimatedMinutesWatched": 228
+    },
+    {
+      "insightTrafficSourceDetail": "monkey",
+      "views": 1094,
+      "estimatedMinutesWatched": 186
+    },
+    {
+      "insightTrafficSourceDetail": "cat sound",
+      "views": 1050,
+      "estimatedMinutesWatched": 179
+    },
+    {
+      "insightTrafficSourceDetail": "jcb",
+      "views": 1005,
+      "estimatedMinutesWatched": 181
+    }
+  ],
+  "top_external_sources": [
+    {
+      "insightTrafficSourceDetail": "WhatsApp",
+      "views": 207670,
+      "estimatedMinutesWatched": 84188
+    },
+    {
+      "insightTrafficSourceDetail": "whatsapp.com",
+      "views": 67905,
+      "estimatedMinutesWatched": 52928
+    },
+    {
+      "insightTrafficSourceDetail": "WhatsApp Business",
+      "views": 5245,
+      "estimatedMinutesWatched": 1973
+    },
+    {
+      "insightTrafficSourceDetail": "YouTube",
+      "views": 838,
+      "estimatedMinutesWatched": 374
+    },
+    {
+      "insightTrafficSourceDetail": "com.oplus.safecenter",
+      "views": 662,
+      "estimatedMinutesWatched": 254
+    },
+    {
+      "insightTrafficSourceDetail": "com.miui.securitycenter",
+      "views": 527,
+      "estimatedMinutesWatched": 210
+    },
+    {
+      "insightTrafficSourceDetail": "com.google.android.apps.messaging",
+      "views": 297,
+      "estimatedMinutesWatched": 126
+    },
+    {
+      "insightTrafficSourceDetail": "com.google.android.as",
+      "views": 270,
+      "estimatedMinutesWatched": 119
+    },
+    {
+      "insightTrafficSourceDetail": "Instagram",
+      "views": 212,
+      "estimatedMinutesWatched": 173
+    },
+    {
+      "insightTrafficSourceDetail": "instagram.com",
+      "views": 156,
+      "estimatedMinutesWatched": 411
+    },
+    {
+      "insightTrafficSourceDetail": "com.coloros.safecenter",
+      "views": 120,
+      "estimatedMinutesWatched": 51
+    },
+    {
+      "insightTrafficSourceDetail": "com.google.android.ext.services",
+      "views": 115,
+      "estimatedMinutesWatched": 40
+    },
+    {
+      "insightTrafficSourceDetail": "org.telegram.messenger",
+      "views": 92,
+      "estimatedMinutesWatched": 42
+    },
+    {
+      "insightTrafficSourceDetail": "com.imo.android.imoim",
+      "views": 71,
+      "estimatedMinutesWatched": 31
+    },
+    {
+      "insightTrafficSourceDetail": "Chrome",
+      "views": 63,
+      "estimatedMinutesWatched": 16
+    }
+  ],
   "top_countries": [
     {
       "country": "IN",
-      "views": 28595967,
-      "estimatedMinutesWatched": 8263050,
-      "subscribersGained": 59486
+      "views": 31026910,
+      "estimatedMinutesWatched": 8916983,
+      "subscribersGained": 62920
     },
     {
       "country": "US",
-      "views": 70627,
-      "estimatedMinutesWatched": 32426,
-      "subscribersGained": 67
+      "views": 81149,
+      "estimatedMinutesWatched": 38626,
+      "subscribersGained": 78
     },
     {
       "country": "KW",
-      "views": 39179,
-      "estimatedMinutesWatched": 11728,
+      "views": 43172,
+      "estimatedMinutesWatched": 12903,
       "subscribersGained": 24
     },
     {
       "country": "AE",
-      "views": 32511,
-      "estimatedMinutesWatched": 10251,
+      "views": 36244,
+      "estimatedMinutesWatched": 11400,
       "subscribersGained": 33
     },
     {
       "country": "GB",
-      "views": 16358,
-      "estimatedMinutesWatched": 5845,
+      "views": 18684,
+      "estimatedMinutesWatched": 6804,
       "subscribersGained": 0
     },
     {
       "country": "OM",
-      "views": 11828,
-      "estimatedMinutesWatched": 3515,
+      "views": 13308,
+      "estimatedMinutesWatched": 3978,
       "subscribersGained": 0
     },
     {
       "country": "QA",
-      "views": 10879,
-      "estimatedMinutesWatched": 3441,
+      "views": 12201,
+      "estimatedMinutesWatched": 3885,
       "subscribersGained": 0
     },
     {
       "country": "SA",
-      "views": 9882,
-      "estimatedMinutesWatched": 3071,
+      "views": 10971,
+      "estimatedMinutesWatched": 3440,
       "subscribersGained": 11
     },
     {
-      "country": "CA",
-      "views": 8459,
-      "estimatedMinutesWatched": 2997,
+      "country": "AU",
+      "views": 9810,
+      "estimatedMinutesWatched": 4641,
       "subscribersGained": 0
     },
     {
-      "country": "AU",
-      "views": 8259,
-      "estimatedMinutesWatched": 3908,
+      "country": "CA",
+      "views": 9596,
+      "estimatedMinutesWatched": 3519,
       "subscribersGained": 0
     },
     {
       "country": "BH",
-      "views": 7185,
-      "estimatedMinutesWatched": 1980,
+      "views": 7931,
+      "estimatedMinutesWatched": 2172,
       "subscribersGained": 0
     },
     {
       "country": "SG",
-      "views": 5945,
-      "estimatedMinutesWatched": 2157,
+      "views": 6873,
+      "estimatedMinutesWatched": 2500,
       "subscribersGained": 0
     },
     {
       "country": "DE",
-      "views": 4479,
-      "estimatedMinutesWatched": 1292,
+      "views": 5170,
+      "estimatedMinutesWatched": 1491,
       "subscribersGained": 0
     },
     {
       "country": "MY",
-      "views": 2267,
-      "estimatedMinutesWatched": 640,
+      "views": 2596,
+      "estimatedMinutesWatched": 716,
       "subscribersGained": 0
     },
     {
       "country": "NL",
-      "views": 2077,
-      "estimatedMinutesWatched": 577,
+      "views": 2345,
+      "estimatedMinutesWatched": 632,
+      "subscribersGained": 0
+    },
+    {
+      "country": "IL",
+      "views": 1832,
+      "estimatedMinutesWatched": 498,
+      "subscribersGained": 0
+    },
+    {
+      "country": "FR",
+      "views": 1665,
+      "estimatedMinutesWatched": 408,
+      "subscribersGained": 0
+    },
+    {
+      "country": "NZ",
+      "views": 1372,
+      "estimatedMinutesWatched": 426,
+      "subscribersGained": 0
+    },
+    {
+      "country": "IE",
+      "views": 1169,
+      "estimatedMinutesWatched": 287,
+      "subscribersGained": 0
+    },
+    {
+      "country": "SE",
+      "views": 938,
+      "estimatedMinutesWatched": 258,
+      "subscribersGained": 0
+    },
+    {
+      "country": "ZM",
+      "views": 768,
+      "estimatedMinutesWatched": 220,
+      "subscribersGained": 0
+    },
+    {
+      "country": "JP",
+      "views": 725,
+      "estimatedMinutesWatched": 197,
+      "subscribersGained": 0
+    },
+    {
+      "country": "TZ",
+      "views": 687,
+      "estimatedMinutesWatched": 211,
+      "subscribersGained": 0
+    },
+    {
+      "country": "ZA",
+      "views": 501,
+      "estimatedMinutesWatched": 145,
+      "subscribersGained": 0
+    },
+    {
+      "country": "MV",
+      "views": 484,
+      "estimatedMinutesWatched": 134,
       "subscribersGained": 0
     }
   ],
   "subscribed_breakdown": [
     {
       "subscribedStatus": "UNSUBSCRIBED",
-      "views": 27867917,
-      "estimatedMinutesWatched": 8089302
+      "views": 30230071,
+      "estimatedMinutesWatched": 8729819
     },
     {
       "subscribedStatus": "SUBSCRIBED",
-      "views": 990964,
-      "estimatedMinutesWatched": 272131
+      "views": 1092159,
+      "estimatedMinutesWatched": 300322
     }
   ],
   "device_types": [
     {
       "deviceType": "MOBILE",
-      "views": 26944944,
-      "estimatedMinutesWatched": 7327585
+      "views": 29295081,
+      "estimatedMinutesWatched": 7919467
     },
     {
       "deviceType": "TV",
-      "views": 1584854,
-      "estimatedMinutesWatched": 932318
+      "views": 1674970,
+      "estimatedMinutesWatched": 1002413
     },
     {
       "deviceType": "TABLET",
-      "views": 196379,
-      "estimatedMinutesWatched": 59144
+      "views": 211015,
+      "estimatedMinutesWatched": 63147
     },
     {
       "deviceType": "DESKTOP",
-      "views": 122759,
-      "estimatedMinutesWatched": 38260
+      "views": 130606,
+      "estimatedMinutesWatched": 40674
     }
   ],
   "operating_systems": [
     {
       "operatingSystem": "ANDROID",
-      "views": 27560995,
-      "estimatedMinutesWatched": 7815538
+      "views": 29911396,
+      "estimatedMinutesWatched": 8435655
     },
     {
       "operatingSystem": "IOS",
-      "views": 611497,
-      "estimatedMinutesWatched": 181503
+      "views": 682627,
+      "estimatedMinutesWatched": 201300
     },
     {
       "operatingSystem": "WEBOS",
-      "views": 248206,
-      "estimatedMinutesWatched": 132308
+      "views": 262553,
+      "estimatedMinutesWatched": 141990
     },
     {
       "operatingSystem": "SMART_TV",
-      "views": 207533,
-      "estimatedMinutesWatched": 125053
+      "views": 220144,
+      "estimatedMinutesWatched": 135412
     },
     {
       "operatingSystem": "WINDOWS",
-      "views": 108467,
-      "estimatedMinutesWatched": 34185
+      "views": 115236,
+      "estimatedMinutesWatched": 36294
     },
     {
       "operatingSystem": "AMAZON_FIREOS",
-      "views": 42823,
-      "estimatedMinutesWatched": 31660
+      "views": 45435,
+      "estimatedMinutesWatched": 34726
     },
     {
       "operatingSystem": "KAIOS",
-      "views": 14401,
-      "estimatedMinutesWatched": 8505
+      "views": 15813,
+      "estimatedMinutesWatched": 9399
     },
     {
       "operatingSystem": "MACINTOSH",
-      "views": 6990,
-      "estimatedMinutesWatched": 1819
-    },
-    {
-      "operatingSystem": "VIDAA",
-      "views": 4966,
-      "estimatedMinutesWatched": 3542
+      "views": 7577,
+      "estimatedMinutesWatched": 1959
     },
     {
       "operatingSystem": "LINUX",
-      "views": 4871,
-      "estimatedMinutesWatched": 2281
+      "views": 5371,
+      "estimatedMinutesWatched": 2476
+    },
+    {
+      "operatingSystem": "VIDAA",
+      "views": 5273,
+      "estimatedMinutesWatched": 3849
     },
     {
       "operatingSystem": "CHROME_OS",
-      "views": 2051,
-      "estimatedMinutesWatched": 607
+      "views": 2171,
+      "estimatedMinutesWatched": 642
     },
     {
       "operatingSystem": "APPLE_TVOS",
-      "views": 1333,
-      "estimatedMinutesWatched": 1253
+      "views": 1484,
+      "estimatedMinutesWatched": 1591
     },
     {
       "operatingSystem": "ROKUOS",
-      "views": 813,
-      "estimatedMinutesWatched": 942
+      "views": 891,
+      "estimatedMinutesWatched": 1091
     },
     {
       "operatingSystem": "TIZEN",
-      "views": 132,
-      "estimatedMinutesWatched": 99
+      "views": 136,
+      "estimatedMinutesWatched": 111
     },
     {
       "operatingSystem": "CHROMECAST",
-      "views": 97,
-      "estimatedMinutesWatched": 189
+      "views": 103,
+      "estimatedMinutesWatched": 205
     },
     {
       "operatingSystem": "PLAYSTATION",
-      "views": 42,
-      "estimatedMinutesWatched": 29
+      "views": 45,
+      "estimatedMinutesWatched": 40
     },
     {
       "operatingSystem": "WINDOWS_MOBILE",
@@ -315,265 +591,440 @@
       "estimatedMinutesWatched": 2
     }
   ],
+  "playback_locations": [
+    {
+      "insightPlaybackLocationType": "SHORTS_FEED",
+      "views": 30878786,
+      "estimatedMinutesWatched": 8023617
+    },
+    {
+      "insightPlaybackLocationType": "WATCH",
+      "views": 238674,
+      "estimatedMinutesWatched": 786938
+    },
+    {
+      "insightPlaybackLocationType": "BROWSE",
+      "views": 131639,
+      "estimatedMinutesWatched": 163963
+    },
+    {
+      "insightPlaybackLocationType": "EMBEDDED",
+      "views": 68016,
+      "estimatedMinutesWatched": 52972
+    },
+    {
+      "insightPlaybackLocationType": "YT_OTHER",
+      "views": 5115,
+      "estimatedMinutesWatched": 2648
+    }
+  ],
+  "content_type": [
+    {
+      "creatorContentType": "shorts",
+      "views": 31018471,
+      "estimatedMinutesWatched": 8075330,
+      "likes": 650122,
+      "shares": 313322,
+      "subscribersGained": 58235
+    },
+    {
+      "creatorContentType": "videoOnDemand",
+      "views": 307522,
+      "estimatedMinutesWatched": 954138,
+      "likes": 6160,
+      "shares": 11686,
+      "subscribersGained": 2177
+    },
+    {
+      "creatorContentType": "creatorContentTypeUnspecified",
+      "views": 0,
+      "estimatedMinutesWatched": 0,
+      "likes": 0,
+      "shares": 0,
+      "subscribersGained": 6149
+    }
+  ],
   "demographics": [],
   "sharing_services": [
     {
       "sharingService": "WHATS_APP",
-      "shares": 270079
+      "shares": 293059
     },
     {
       "sharingService": "OTHER",
-      "shares": 10801
+      "shares": 11519
     },
     {
       "sharingService": "WHATS_APP_BUSINESS",
-      "shares": 6848
+      "shares": 7539
     },
     {
       "sharingService": "COPY_PASTE",
-      "shares": 6068
+      "shares": 6619
     },
     {
       "sharingService": "DIRECT_SYSTEM_ACTIVITY_DIALOG",
-      "shares": 1844
+      "shares": 2015
     },
     {
       "sharingService": "INSTAGRAM",
-      "shares": 1200
+      "shares": 1269
     },
     {
       "sharingService": "TEXT_MESSAGE",
-      "shares": 903
+      "shares": 971
     },
     {
       "sharingService": "FACEBOOK",
-      "shares": 480
+      "shares": 513
     },
     {
       "sharingService": "GMAIL",
-      "shares": 448
+      "shares": 481
     },
     {
       "sharingService": "GOOGLE_KEEP",
-      "shares": 232
+      "shares": 281
     },
     {
       "sharingService": "IMO",
-      "shares": 169
+      "shares": 186
     },
     {
       "sharingService": "SHARE_TO_SNAPCHAT_CAMERA",
-      "shares": 141
+      "shares": 148
     },
     {
       "sharingService": "SNAPCHAT",
-      "shares": 96
+      "shares": 108
     },
     {
       "sharingService": "FACEBOOK_MESSENGER",
-      "shares": 83
+      "shares": 96
     },
     {
       "sharingService": "PINTEREST",
-      "shares": 56
+      "shares": 59
     }
   ],
   "daily_trends": [
-    {
-      "day": "2026-02-07",
-      "views": 590988,
-      "subscribersGained": 1775,
-      "subscribersLost": 81,
-      "estimatedMinutesWatched": 142893
-    },
-    {
-      "day": "2026-02-08",
-      "views": 1400722,
-      "subscribersGained": 3437,
-      "subscribersLost": 186,
-      "estimatedMinutesWatched": 412113
-    },
     {
       "day": "2026-02-09",
       "views": 1223571,
       "subscribersGained": 2876,
       "subscribersLost": 164,
-      "estimatedMinutesWatched": 354302
+      "estimatedMinutesWatched": 354302,
+      "likes": 28868,
+      "shares": 22431,
+      "comments": 53
     },
     {
       "day": "2026-02-10",
       "views": 1245831,
       "subscribersGained": 3064,
       "subscribersLost": 173,
-      "estimatedMinutesWatched": 402480
+      "estimatedMinutesWatched": 402480,
+      "likes": 29148,
+      "shares": 16363,
+      "comments": 45
     },
     {
       "day": "2026-02-11",
       "views": 673950,
       "subscribersGained": 1394,
       "subscribersLost": 95,
-      "estimatedMinutesWatched": 201297
+      "estimatedMinutesWatched": 201297,
+      "likes": 16010,
+      "shares": 10423,
+      "comments": 46
     },
     {
       "day": "2026-02-12",
       "views": 1831511,
       "subscribersGained": 3813,
       "subscribersLost": 163,
-      "estimatedMinutesWatched": 505775
+      "estimatedMinutesWatched": 505775,
+      "likes": 41705,
+      "shares": 22276,
+      "comments": 140
     },
     {
       "day": "2026-02-13",
       "views": 3104133,
       "subscribersGained": 8824,
       "subscribersLost": 289,
-      "estimatedMinutesWatched": 870115
+      "estimatedMinutesWatched": 870115,
+      "likes": 66953,
+      "shares": 27399,
+      "comments": 150
     },
     {
       "day": "2026-02-14",
       "views": 3120527,
       "subscribersGained": 5803,
       "subscribersLost": 330,
-      "estimatedMinutesWatched": 770560
+      "estimatedMinutesWatched": 770560,
+      "likes": 69545,
+      "shares": 24270,
+      "comments": 237
     },
     {
       "day": "2026-02-15",
       "views": 1798274,
       "subscribersGained": 3889,
       "subscribersLost": 265,
-      "estimatedMinutesWatched": 454336
+      "estimatedMinutesWatched": 454336,
+      "likes": 43150,
+      "shares": 14860,
+      "comments": 96
     },
     {
       "day": "2026-02-16",
       "views": 1006756,
       "subscribersGained": 3252,
       "subscribersLost": 155,
-      "estimatedMinutesWatched": 267349
+      "estimatedMinutesWatched": 267349,
+      "likes": 25625,
+      "shares": 11682,
+      "comments": 45
     },
     {
       "day": "2026-02-17",
       "views": 820194,
       "subscribersGained": 3273,
       "subscribersLost": 147,
-      "estimatedMinutesWatched": 228334
+      "estimatedMinutesWatched": 228334,
+      "likes": 20512,
+      "shares": 8124,
+      "comments": 57
     },
     {
       "day": "2026-02-18",
       "views": 419636,
       "subscribersGained": 1475,
       "subscribersLost": 101,
-      "estimatedMinutesWatched": 134714
+      "estimatedMinutesWatched": 134714,
+      "likes": 10418,
+      "shares": 3554,
+      "comments": 39
     },
     {
       "day": "2026-02-19",
       "views": 618490,
       "subscribersGained": 1608,
       "subscribersLost": 102,
-      "estimatedMinutesWatched": 183533
+      "estimatedMinutesWatched": 183533,
+      "likes": 13997,
+      "shares": 4270,
+      "comments": 36
     },
     {
       "day": "2026-02-20",
       "views": 176406,
       "subscribersGained": 629,
       "subscribersLost": 44,
-      "estimatedMinutesWatched": 92594
+      "estimatedMinutesWatched": 92594,
+      "likes": 3736,
+      "shares": 2057,
+      "comments": 20
     },
     {
       "day": "2026-02-21",
       "views": 332671,
       "subscribersGained": 769,
       "subscribersLost": 43,
-      "estimatedMinutesWatched": 144164
+      "estimatedMinutesWatched": 144164,
+      "likes": 6649,
+      "shares": 2931,
+      "comments": 33
     },
     {
       "day": "2026-02-22",
       "views": 490936,
       "subscribersGained": 1030,
       "subscribersLost": 58,
-      "estimatedMinutesWatched": 188213
+      "estimatedMinutesWatched": 188213,
+      "likes": 12564,
+      "shares": 5365,
+      "comments": 43
     },
     {
       "day": "2026-02-23",
       "views": 467246,
       "subscribersGained": 1090,
       "subscribersLost": 65,
-      "estimatedMinutesWatched": 178111
+      "estimatedMinutesWatched": 178111,
+      "likes": 12637,
+      "shares": 5194,
+      "comments": 63
     },
     {
       "day": "2026-02-24",
       "views": 323185,
       "subscribersGained": 480,
       "subscribersLost": 46,
-      "estimatedMinutesWatched": 118508
+      "estimatedMinutesWatched": 118508,
+      "likes": 8381,
+      "shares": 4923,
+      "comments": 22
     },
     {
       "day": "2026-02-25",
       "views": 265235,
       "subscribersGained": 512,
       "subscribersLost": 41,
-      "estimatedMinutesWatched": 106889
+      "estimatedMinutesWatched": 106889,
+      "likes": 7213,
+      "shares": 4225,
+      "comments": 34
     },
     {
       "day": "2026-02-26",
       "views": 551934,
       "subscribersGained": 1136,
       "subscribersLost": 64,
-      "estimatedMinutesWatched": 188002
+      "estimatedMinutesWatched": 188002,
+      "likes": 12432,
+      "shares": 6841,
+      "comments": 44
     },
     {
       "day": "2026-02-27",
       "views": 557250,
       "subscribersGained": 1047,
       "subscribersLost": 66,
-      "estimatedMinutesWatched": 163230
+      "estimatedMinutesWatched": 163230,
+      "likes": 10782,
+      "shares": 5142,
+      "comments": 46
     },
     {
       "day": "2026-02-28",
       "views": 819222,
       "subscribersGained": 1144,
       "subscribersLost": 77,
-      "estimatedMinutesWatched": 204565
+      "estimatedMinutesWatched": 204565,
+      "likes": 11084,
+      "shares": 4491,
+      "comments": 19
     },
     {
       "day": "2026-03-01",
       "views": 372732,
       "subscribersGained": 585,
       "subscribersLost": 75,
-      "estimatedMinutesWatched": 123068
+      "estimatedMinutesWatched": 123068,
+      "likes": 4852,
+      "shares": 2007,
+      "comments": 11
     },
     {
       "day": "2026-03-02",
       "views": 528760,
       "subscribersGained": 620,
       "subscribersLost": 47,
-      "estimatedMinutesWatched": 168966
+      "estimatedMinutesWatched": 168966,
+      "likes": 6564,
+      "shares": 2030,
+      "comments": 26
     },
     {
       "day": "2026-03-03",
       "views": 2403097,
       "subscribersGained": 2978,
       "subscribersLost": 147,
-      "estimatedMinutesWatched": 674761
+      "estimatedMinutesWatched": 674761,
+      "likes": 34763,
+      "shares": 13264,
+      "comments": 44
     },
     {
       "day": "2026-03-04",
       "views": 1535838,
       "subscribersGained": 2277,
       "subscribersLost": 118,
-      "estimatedMinutesWatched": 458226
+      "estimatedMinutesWatched": 458226,
+      "likes": 23081,
+      "shares": 13336,
+      "comments": 60
     },
     {
       "day": "2026-03-05",
-      "views": 930911,
+      "views": 930500,
       "subscribersGained": 1390,
       "subscribersLost": 85,
-      "estimatedMinutesWatched": 265705
+      "estimatedMinutesWatched": 265937,
+      "likes": 12754,
+      "shares": 7332,
+      "comments": 25
     },
     {
       "day": "2026-03-06",
       "views": 731238,
       "subscribersGained": 1000,
       "subscribersLost": 62,
-      "estimatedMinutesWatched": 214466
+      "estimatedMinutesWatched": 214466,
+      "likes": 9758,
+      "shares": 5186,
+      "comments": 20
+    },
+    {
+      "day": "2026-03-07",
+      "views": 1261420,
+      "subscribersGained": 1826,
+      "subscribersLost": 88,
+      "estimatedMinutesWatched": 330083,
+      "likes": 22088,
+      "shares": 11462,
+      "comments": 46
+    },
+    {
+      "day": "2026-03-08",
+      "views": 1203553,
+      "subscribersGained": 1735,
+      "subscribersLost": 91,
+      "estimatedMinutesWatched": 338386,
+      "likes": 26848,
+      "shares": 13968,
+      "comments": 35
+    }
+  ],
+  "monthly_trends": [
+    {
+      "month": "2025-12",
+      "views": 16624,
+      "subscribersGained": 37,
+      "subscribersLost": 4,
+      "estimatedMinutesWatched": 2432,
+      "likes": 202,
+      "shares": 73
+    },
+    {
+      "month": "2026-01",
+      "views": 74644,
+      "subscribersGained": 195,
+      "subscribersLost": 14,
+      "estimatedMinutesWatched": 8277,
+      "likes": 1035,
+      "shares": 125
+    },
+    {
+      "month": "2026-02",
+      "views": 22265037,
+      "subscribersGained": 53919,
+      "subscribersLost": 2820,
+      "estimatedMinutesWatched": 6445528,
+      "likes": 514349,
+      "shares": 256224
+    },
+    {
+      "month": "2026-03",
+      "views": 8967138,
+      "subscribersGained": 12411,
+      "subscribersLost": 713,
+      "estimatedMinutesWatched": 2573896,
+      "likes": 140708,
+      "shares": 68585
     }
   ],
   "channel_metadata": {
@@ -583,18 +1034,17 @@
     "custom_url": "@telugu_sampada",
     "published_at": "2025-12-13T15:02:22.845271Z",
     "country": "IN",
-    "subscriber_count": 62900,
+    "subscriber_count": 64700,
     "hidden_subscriber_count": false,
-    "view_count": 30274497,
-    "video_count": 68,
+    "view_count": 32627475,
+    "video_count": 69,
     "keywords": "\"Telugu Sampada\" \"telugu health tips\" \"telugu samethalu\" \"telugu wisdom\" \"telugu shorts\" \"Telugu Sampada\" \"telugu health tips\" \"telugu samethalu\" \"telugu proverbs\" \"health tips in telugu\" \"telugu wisdom\" \"telugu shorts\" \"home remedies telugu\" \"ayurveda telugu\" \"superfoods telugu\" \"telugu kitchen tips\" \"telugu padyalu\" \"sumati satakam\" \"natural remedies\" \"weight loss telugu\" \"hair care telugu\" \"indian superfoods\" siridhanyalu \"telugu culture\" \"telugu facts\"",
     "topic_categories": [
+      "https://en.wikipedia.org/wiki/Knowledge",
       "https://en.wikipedia.org/wiki/Religion",
       "https://en.wikipedia.org/wiki/Entertainment",
       "https://en.wikipedia.org/wiki/Health",
-      "https://en.wikipedia.org/wiki/Society",
-      "https://en.wikipedia.org/wiki/Lifestyle_(sociology)",
-      "https://en.wikipedia.org/wiki/Knowledge"
+      "https://en.wikipedia.org/wiki/Lifestyle_(sociology)"
     ],
     "thumbnails": {
       "default": "https://yt3.ggpht.com/Qf-RINhxD3WjXqFfdMq-zLdMLgOmIAUnsn2tiipO6GWMmBimYqqn2DRHYjFvSa-VbonKklIsxw=s88-c-k-c0x00ffffff-no-rj",
@@ -607,6 +1057,6 @@
     "made_for_kids": false,
     "self_declared_made_for_kids": false,
     "unsubscribed_trailer": "",
-    "last_refreshed": "2026-03-09T12:00:01.244673"
+    "last_refreshed": "2026-03-11T09:01:20.358684"
   }
 }

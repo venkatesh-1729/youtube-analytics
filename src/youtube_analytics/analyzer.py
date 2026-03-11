@@ -1,7 +1,7 @@
 """
 Analytics computation: summaries, rankings, insights, and competitor comparison.
 
-Based on Inkwell's backend/core/analytics.py, enhanced with competitor analysis.
+Provides both combined and format-specific (Shorts vs Long-form) analysis.
 """
 
 from __future__ import annotations
@@ -19,6 +19,10 @@ from youtube_analytics.models import (
 
 logger = logging.getLogger(__name__)
 
+
+# ---------------------------------------------------------------------------
+# Channel summary
+# ---------------------------------------------------------------------------
 
 def compute_summary(
     channel_name: str,
@@ -76,6 +80,10 @@ def compute_summary(
     )
 
 
+# ---------------------------------------------------------------------------
+# Video ranking
+# ---------------------------------------------------------------------------
+
 def rank_videos(
     videos: list[VideoMetrics],
     sort_by: str = "views",
@@ -119,10 +127,309 @@ def rank_videos(
             "net_subscribers": v.net_subscribers,
             "is_short": v.is_short,
             "watch_time_minutes": v.estimated_minutes_watched,
+            "duration_bracket": v.duration_bracket,
         }
         for i, v in enumerate(ranked)
     ]
 
+
+# ---------------------------------------------------------------------------
+# Format-specific analysis (Shorts vs Long-form)
+# ---------------------------------------------------------------------------
+
+def _format_stats(videos: list[VideoMetrics]) -> dict[str, Any]:
+    """Compute aggregate stats for a list of videos (helper).
+
+    Args:
+        videos: Subset of videos (e.g. only Shorts or only Long-form).
+
+    Returns:
+        Dict with count, averages, totals, and top performer.
+    """
+    if not videos:
+        return {"count": 0}
+
+    total_views = sum(v.views for v in videos)
+    with_views = [v for v in videos if v.views > 0]
+    top = max(videos, key=lambda v: v.views)
+
+    return {
+        "count": len(videos),
+        "total_views": total_views,
+        "avg_views": round(total_views / len(videos)),
+        "avg_retention": round(
+            sum(v.average_view_percentage for v in videos) / len(videos), 1
+        ),
+        "avg_engagement": round(
+            sum(v.engagement_rate for v in with_views) / len(with_views), 2
+        ) if with_views else 0,
+        "total_watch_time_hours": round(
+            sum(v.estimated_minutes_watched for v in videos) / 60, 1
+        ),
+        "total_subscribers_gained": sum(v.subscribers_gained for v in videos),
+        "avg_subscriber_efficiency": round(
+            sum(v.subscriber_efficiency for v in with_views) / len(with_views), 2
+        ) if with_views else 0,
+        "avg_share_rate": round(
+            sum(v.share_rate for v in with_views) / len(with_views), 2
+        ) if with_views else 0,
+        "top_performer": {
+            "title": top.title,
+            "views": top.views,
+            "retention": top.average_view_percentage,
+        },
+    }
+
+
+def compute_format_summary(videos: list[VideoMetrics]) -> dict[str, Any]:
+    """Compute separate stats for Shorts vs Long-form.
+
+    Args:
+        videos: All videos for the channel.
+
+    Returns:
+        Dict with 'shorts', 'long_form', and 'comparison' sections.
+    """
+    shorts = [v for v in videos if v.is_short]
+    long_form = [v for v in videos if not v.is_short]
+
+    shorts_stats = _format_stats(shorts)
+    long_stats = _format_stats(long_form)
+
+    comparison: dict[str, Any] = {}
+    if shorts_stats["count"] > 0 and long_stats["count"] > 0:
+        comparison = {
+            "views_ratio": round(
+                shorts_stats["avg_views"] / long_stats["avg_views"], 2
+            ) if long_stats["avg_views"] > 0 else 0,
+            "retention_diff": round(
+                shorts_stats["avg_retention"] - long_stats["avg_retention"], 1
+            ),
+            "subs_per_view_winner": (
+                "shorts" if shorts_stats["avg_subscriber_efficiency"]
+                > long_stats["avg_subscriber_efficiency"] else "long_form"
+            ),
+            "share_rate_winner": (
+                "shorts" if shorts_stats["avg_share_rate"]
+                > long_stats["avg_share_rate"] else "long_form"
+            ),
+        }
+
+    return {
+        "shorts": shorts_stats,
+        "long_form": long_stats,
+        "comparison": comparison,
+    }
+
+
+def compute_shorts_insights(shorts: list[VideoMetrics]) -> list[dict[str, Any]]:
+    """Generate Shorts-specific insights.
+
+    Analyzes replay rates, optimal duration, and topic performance
+    for short-form content.
+
+    Args:
+        shorts: List of Shorts-only VideoMetrics.
+
+    Returns:
+        List of insight dicts.
+    """
+    if not shorts:
+        return []
+
+    insights: list[dict[str, Any]] = []
+
+    # --- Replay rate analysis (avg_view_percentage > 100% means replays) ---
+    replayed = [v for v in shorts if v.average_view_percentage > 100]
+    if replayed:
+        insights.append({
+            "type": "shorts_replay",
+            "title": "🔄 High Replay Shorts",
+            "description": (
+                f"{len(replayed)}/{len(shorts)} Shorts have replay rates (>100% avg view). "
+                "These hook viewers into watching again."
+            ),
+            "data": [
+                {
+                    "title": v.title,
+                    "replay_rate": f"{v.average_view_percentage}%",
+                    "views": v.views,
+                }
+                for v in sorted(replayed, key=lambda v: v.average_view_percentage, reverse=True)[:5]
+            ],
+        })
+
+    # --- Optimal duration bucket ---
+    duration_buckets: dict[str, list[VideoMetrics]] = {
+        "0-15s": [],
+        "15-30s": [],
+        "30-45s": [],
+        "45-60s": [],
+    }
+    for v in shorts:
+        s = v.duration_seconds
+        if s <= 15:
+            duration_buckets["0-15s"].append(v)
+        elif s <= 30:
+            duration_buckets["15-30s"].append(v)
+        elif s <= 45:
+            duration_buckets["30-45s"].append(v)
+        else:
+            duration_buckets["45-60s"].append(v)
+
+    bucket_stats = []
+    for bucket_name, bucket_videos in duration_buckets.items():
+        if bucket_videos:
+            avg_views = sum(v.views for v in bucket_videos) / len(bucket_videos)
+            avg_ret = sum(v.average_view_percentage for v in bucket_videos) / len(bucket_videos)
+            bucket_stats.append({
+                "duration": bucket_name,
+                "count": len(bucket_videos),
+                "avg_views": round(avg_views),
+                "avg_retention": round(avg_ret, 1),
+            })
+
+    if bucket_stats:
+        best_bucket = max(bucket_stats, key=lambda b: b["avg_views"])
+        insights.append({
+            "type": "shorts_duration",
+            "title": "⏱️ Optimal Short Duration",
+            "description": f"Best performing duration: {best_bucket['duration']} "
+                          f"(avg {best_bucket['avg_views']:,} views)",
+            "data": bucket_stats,
+        })
+
+    # --- Top Shorts tags ---
+    all_tags: list[str] = []
+    for v in shorts:
+        all_tags.extend(tag.lower() for tag in v.tags)
+    if all_tags:
+        tag_counts = Counter(all_tags).most_common(10)
+        insights.append({
+            "type": "shorts_tags",
+            "title": "🏷️ Top Shorts Tags",
+            "description": "Most used tags across Shorts content",
+            "data": [{"tag": t, "count": c} for t, c in tag_counts],
+        })
+
+    return insights
+
+
+def compute_longform_insights(long_form: list[VideoMetrics]) -> list[dict[str, Any]]:
+    """Generate Long-form specific insights.
+
+    Analyzes retention patterns, watch time contributions,
+    and optimal video lengths.
+
+    Args:
+        long_form: List of Long-form-only VideoMetrics.
+
+    Returns:
+        List of insight dicts.
+    """
+    if not long_form:
+        return []
+
+    insights: list[dict[str, Any]] = []
+
+    # --- Watch time contribution ---
+    total_wt = sum(v.estimated_minutes_watched for v in long_form)
+    if total_wt > 0:
+        top_wt = sorted(long_form, key=lambda v: v.estimated_minutes_watched, reverse=True)[:5]
+        insights.append({
+            "type": "longform_watch_time",
+            "title": "⏰ Watch Time Champions",
+            "description": "Long-form videos driving the most watch time",
+            "data": [
+                {
+                    "title": v.title,
+                    "watch_time_hours": round(v.estimated_minutes_watched / 60, 1),
+                    "pct_of_total": round(v.estimated_minutes_watched / total_wt * 100, 1),
+                    "views": v.views,
+                }
+                for v in top_wt
+            ],
+        })
+
+    # --- Optimal length analysis ---
+    length_buckets: dict[str, list[VideoMetrics]] = {
+        "1-5 min": [],
+        "5-10 min": [],
+        "10-20 min": [],
+        "20+ min": [],
+    }
+    for v in long_form:
+        m = v.duration_seconds / 60
+        if m <= 5:
+            length_buckets["1-5 min"].append(v)
+        elif m <= 10:
+            length_buckets["5-10 min"].append(v)
+        elif m <= 20:
+            length_buckets["10-20 min"].append(v)
+        else:
+            length_buckets["20+ min"].append(v)
+
+    bucket_stats = []
+    for name, vids in length_buckets.items():
+        if vids:
+            avg_views = sum(v.views for v in vids) / len(vids)
+            avg_ret = sum(v.average_view_percentage for v in vids) / len(vids)
+            avg_sub = sum(v.subscriber_efficiency for v in vids if v.views > 0)
+            n_with_views = len([v for v in vids if v.views > 0])
+            bucket_stats.append({
+                "length": name,
+                "count": len(vids),
+                "avg_views": round(avg_views),
+                "avg_retention": round(avg_ret, 1),
+                "avg_sub_efficiency": round(avg_sub / n_with_views, 2) if n_with_views else 0,
+            })
+
+    if bucket_stats:
+        best = max(bucket_stats, key=lambda b: b["avg_views"])
+        insights.append({
+            "type": "longform_optimal_length",
+            "title": "📏 Optimal Video Length",
+            "description": f"Best performing length: {best['length']} "
+                          f"(avg {best['avg_views']:,} views)",
+            "data": bucket_stats,
+        })
+
+    # --- Chapter analysis ---
+    with_chapters = [v for v in long_form if v.chapters]
+    without_chapters = [v for v in long_form if not v.chapters]
+    if with_chapters and without_chapters:
+        avg_views_with = sum(v.views for v in with_chapters) / len(with_chapters)
+        avg_views_without = sum(v.views for v in without_chapters) / len(without_chapters)
+        avg_ret_with = sum(v.average_view_percentage for v in with_chapters) / len(with_chapters)
+        avg_ret_without = (
+            sum(v.average_view_percentage for v in without_chapters)
+            / len(without_chapters)
+        )
+
+        insights.append({
+            "type": "longform_chapters",
+            "title": "📑 Chapter Impact",
+            "description": "How chapters affect video performance",
+            "data": {
+                "with_chapters": {
+                    "count": len(with_chapters),
+                    "avg_views": round(avg_views_with),
+                    "avg_retention": round(avg_ret_with, 1),
+                },
+                "without_chapters": {
+                    "count": len(without_chapters),
+                    "avg_views": round(avg_views_without),
+                    "avg_retention": round(avg_ret_without, 1),
+                },
+            },
+        })
+
+    return insights
+
+
+# ---------------------------------------------------------------------------
+# Combined insights
+# ---------------------------------------------------------------------------
 
 def compute_insights(
     videos: list[VideoMetrics],
@@ -131,7 +438,7 @@ def compute_insights(
     """Generate actionable insights from channel data.
 
     Analyzes video performance, traffic sources, and audience demographics
-    to produce data-driven recommendations.
+    to produce data-driven recommendations. Includes format-specific insights.
 
     Args:
         videos: List of video metrics.
@@ -216,32 +523,31 @@ def compute_insights(
             ],
         })
 
-    # --- 6. Content type analysis ---
+    # --- 6. Format-specific insights ---
     shorts = [v for v in videos if v.is_short]
     long_form = [v for v in videos if not v.is_short]
-    if shorts and long_form:
-        avg_short_views = sum(v.views for v in shorts) / len(shorts)
-        avg_long_views = sum(v.views for v in long_form) / len(long_form)
-        avg_short_retention = sum(v.average_view_percentage for v in shorts) / len(shorts)
-        avg_long_retention = sum(v.average_view_percentage for v in long_form) / len(long_form)
 
+    # Combined format comparison
+    if shorts and long_form:
+        format_summary = compute_format_summary(videos)
         insights.append({
             "type": "content_format",
             "title": "📊 Shorts vs Long-Form Performance",
             "description": "Comparison between short and long-form content",
             "data": {
-                "shorts": {
-                    "count": len(shorts),
-                    "avg_views": round(avg_short_views),
-                    "avg_retention": round(avg_short_retention, 1),
-                },
-                "long_form": {
-                    "count": len(long_form),
-                    "avg_views": round(avg_long_views),
-                    "avg_retention": round(avg_long_retention, 1),
-                },
+                "shorts": format_summary["shorts"],
+                "long_form": format_summary["long_form"],
+                "comparison": format_summary.get("comparison", {}),
             },
         })
+
+    # Shorts-specific
+    shorts_insights = compute_shorts_insights(shorts)
+    insights.extend(shorts_insights)
+
+    # Long-form-specific
+    longform_insights = compute_longform_insights(long_form)
+    insights.extend(longform_insights)
 
     # --- 7. Tag analysis ---
     all_tags: list[str] = []
@@ -257,7 +563,32 @@ def compute_insights(
             "data": [{"tag": tag, "count": count} for tag, count in tag_counts],
         })
 
-    # --- 8. Traffic source analysis ---
+    # --- 8. Publishing day analysis ---
+    day_views: dict[str, list[int]] = {}
+    for v in videos:
+        day = v.publish_day_of_week
+        if day:
+            day_views.setdefault(day, []).append(v.views)
+
+    if day_views:
+        day_stats = [
+            {
+                "day": day,
+                "count": len(views),
+                "avg_views": round(sum(views) / len(views)),
+            }
+            for day, views in day_views.items()
+        ]
+        day_stats.sort(key=lambda d: d["avg_views"], reverse=True)
+        best_day = day_stats[0]
+        insights.append({
+            "type": "publish_day",
+            "title": "📅 Best Publishing Days",
+            "description": f"Best day: {best_day['day']} (avg {best_day['avg_views']:,} views)",
+            "data": day_stats,
+        })
+
+    # --- 9. Traffic source analysis ---
     if channel_analytics and channel_analytics.traffic_sources:
         sorted_sources = sorted(
             channel_analytics.traffic_sources,
@@ -282,7 +613,7 @@ def compute_insights(
             ],
         })
 
-    # --- 9. Geographic analysis ---
+    # --- 10. Geographic analysis ---
     if channel_analytics and channel_analytics.top_countries:
         insights.append({
             "type": "geography",
@@ -291,7 +622,7 @@ def compute_insights(
             "data": channel_analytics.top_countries[:10],
         })
 
-    # --- 10. Sharing analysis ---
+    # --- 11. Sharing analysis ---
     if channel_analytics and channel_analytics.sharing_services:
         insights.append({
             "type": "sharing_services",
@@ -302,6 +633,10 @@ def compute_insights(
 
     return insights
 
+
+# ---------------------------------------------------------------------------
+# Competitor comparison
+# ---------------------------------------------------------------------------
 
 def compare_with_competitors(
     own_videos: list[VideoMetrics],

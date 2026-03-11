@@ -25,6 +25,9 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.4",
 ]
+enrichment = [
+    "yt-dlp>=2024.0",
+]
 
 [project.scripts]
 youtube-analytics = "youtube_analytics.cli:main"

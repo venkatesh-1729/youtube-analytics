@@ -8,6 +8,9 @@ channel-level analytics, and competitor video data.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import UTC
+
+from youtube_analytics.utils import extract_video_id, parse_publish_date
 
 
 @dataclass
@@ -51,7 +54,33 @@ class VideoMetrics:
     thumbnail_impressions: int = 0
     thumbnail_ctr_percentage: float = 0
 
+    # yt-dlp enrichment fields
+    hashtags: list[str] = field(default_factory=list)
+    chapters: list[dict] = field(default_factory=list)
+    language: str = ""
+    aspect_ratio: str = ""
+    resolution: str = ""
+    has_captions: bool = False
+    caption_languages: list[str] = field(default_factory=list)
+    topic_categories: list[str] = field(default_factory=list)
+    age_restricted: bool = False
+
+    # Additional Analytics API metrics
+    unique_viewers: int = 0
+    card_impressions: int = 0
+    card_click_rate: float = 0
+    end_screen_clicks: int = 0
+    end_screen_click_rate: float = 0
+
+    # Data API fields (from videos.list)
+    default_language: str = ""
+    default_audio_language: str = ""
+    definition: str = ""
+    licensed_content: bool = False
+
     last_refreshed: str = ""
+
+    # --- Computed properties ---
 
     @property
     def net_subscribers(self) -> int:
@@ -78,13 +107,61 @@ class VideoMetrics:
             return 0.0
         return round(self.shares / self.views * 1000, 2)
 
+    @property
+    def duration_bracket(self) -> str:
+        """Categorize video by duration.
+
+        Returns one of: micro, short, medium, standard, long, extended.
+        """
+        s = self.duration_seconds
+        if s <= 30:
+            return "micro"
+        if s <= 60:
+            return "short"
+        if s <= 300:
+            return "medium"
+        if s <= 900:
+            return "standard"
+        if s <= 1800:
+            return "long"
+        return "extended"
+
+    @property
+    def publish_day_of_week(self) -> str:
+        """Day of week the video was published (e.g. 'Monday')."""
+        dt = parse_publish_date(self.published_at)
+        if dt is None:
+            return ""
+        return dt.strftime("%A")
+
+    @property
+    def days_since_published(self) -> int:
+        """Number of days since the video was published."""
+        from datetime import datetime
+
+        dt = parse_publish_date(self.published_at)
+        if dt is None:
+            return 0
+        delta = datetime.now(tz=UTC) - dt
+        return max(0, delta.days)
+
+    @property
+    def views_per_day(self) -> float:
+        """Average views per day since publish."""
+        days = self.days_since_published
+        if days == 0:
+            return float(self.views)
+        return round(self.views / days, 1)
+
+    # --- Serialization ---
+
     @classmethod
     def from_dict(cls, data: dict) -> VideoMetrics:
         """Create VideoMetrics from a metadata.json video entry."""
         url = data.get("url", "")
         video_id = data.get("video_id", "")
         if not video_id and url:
-            video_id = _extract_video_id(url)
+            video_id = extract_video_id(url)
 
         return cls(
             title=data.get("title", ""),
@@ -113,8 +190,76 @@ class VideoMetrics:
             videos_removed_from_playlists=data.get("videos_removed_from_playlists", 0) or 0,
             thumbnail_impressions=data.get("thumbnail_impressions", 0) or 0,
             thumbnail_ctr_percentage=data.get("thumbnail_ctr_percentage", 0) or 0,
+            hashtags=data.get("hashtags", []),
+            chapters=data.get("chapters", []),
+            language=data.get("language", ""),
+            aspect_ratio=data.get("aspect_ratio", ""),
+            resolution=data.get("resolution", ""),
+            has_captions=data.get("has_captions", False),
+            caption_languages=data.get("caption_languages", []),
+            topic_categories=data.get("topic_categories", []),
+            age_restricted=data.get("age_restricted", False),
+            unique_viewers=data.get("unique_viewers", 0) or 0,
+            card_impressions=data.get("card_impressions", 0) or 0,
+            card_click_rate=data.get("card_click_rate", 0) or 0,
+            end_screen_clicks=data.get("end_screen_clicks", 0) or 0,
+            end_screen_click_rate=data.get("end_screen_click_rate", 0) or 0,
+            default_language=data.get("default_language", ""),
+            default_audio_language=data.get("default_audio_language", ""),
+            definition=data.get("definition", ""),
+            licensed_content=data.get("licensed_content", False),
             last_refreshed=data.get("last_refreshed", ""),
         )
+
+    def to_dict(self) -> dict:
+        """Serialize to dict for JSON storage."""
+        return {
+            "title": self.title,
+            "url": self.url,
+            "video_id": self.video_id,
+            "description": self.description,
+            "published_at": self.published_at,
+            "duration_seconds": self.duration_seconds,
+            "thumbnail": self.thumbnail,
+            "category": self.category,
+            "is_short": self.is_short,
+            "tags": self.tags,
+            "transcript": self.transcript,
+            "views": self.views,
+            "likes": self.likes,
+            "dislikes": self.dislikes,
+            "comments": self.comments,
+            "shares": self.shares,
+            "engaged_views": self.engaged_views,
+            "estimated_minutes_watched": self.estimated_minutes_watched,
+            "average_view_duration_seconds": self.average_view_duration_seconds,
+            "average_view_percentage": self.average_view_percentage,
+            "subscribers_gained": self.subscribers_gained,
+            "subscribers_lost": self.subscribers_lost,
+            "videos_added_to_playlists": self.videos_added_to_playlists,
+            "videos_removed_from_playlists": self.videos_removed_from_playlists,
+            "thumbnail_impressions": self.thumbnail_impressions,
+            "thumbnail_ctr_percentage": self.thumbnail_ctr_percentage,
+            "hashtags": self.hashtags,
+            "chapters": self.chapters,
+            "language": self.language,
+            "aspect_ratio": self.aspect_ratio,
+            "resolution": self.resolution,
+            "has_captions": self.has_captions,
+            "caption_languages": self.caption_languages,
+            "topic_categories": self.topic_categories,
+            "age_restricted": self.age_restricted,
+            "unique_viewers": self.unique_viewers,
+            "card_impressions": self.card_impressions,
+            "card_click_rate": self.card_click_rate,
+            "end_screen_clicks": self.end_screen_clicks,
+            "end_screen_click_rate": self.end_screen_click_rate,
+            "default_language": self.default_language,
+            "default_audio_language": self.default_audio_language,
+            "definition": self.definition,
+            "licensed_content": self.licensed_content,
+            "last_refreshed": self.last_refreshed,
+        }
 
 
 @dataclass
@@ -294,18 +439,3 @@ class CompetitorVideo:
             "description": self.description,
             "tags": self.tags,
         }
-
-
-def _extract_video_id(url: str) -> str:
-    """Extract YouTube video ID from a URL."""
-    import re
-
-    patterns = [
-        r"(?:v=|/v/|youtu\.be/)([a-zA-Z0-9_-]{11})",
-        r"(?:shorts/)([a-zA-Z0-9_-]{11})",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, url)
-        if match:
-            return match.group(1)
-    return ""

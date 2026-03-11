@@ -14,6 +14,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from youtube_analytics.utils import extract_video_id as _extract_video_id
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,22 +36,14 @@ METRIC_TO_FIELD: dict[str, str] = {
     "videosRemovedFromPlaylists": "videos_removed_from_playlists",
     "videoThumbnailImpressions": "thumbnail_impressions",
     "videoThumbnailImpressionsClickRate": "thumbnail_ctr_percentage",
+    # Engagement metrics
+    "cardImpressions": "card_impressions",
+    "cardClickRate": "card_click_rate",
+    "endScreenElementClicks": "end_screen_clicks",
+    "endScreenElementClickRate": "end_screen_click_rate",
+    # Audience metrics
+    "uniqueViewers": "unique_viewers",
 }
-
-
-def _extract_video_id(url: str) -> str:
-    """Extract YouTube video ID from a URL."""
-    import re
-
-    patterns = [
-        r"(?:v=|/v/|youtu\.be/)([a-zA-Z0-9_-]{11})",
-        r"(?:shorts/)([a-zA-Z0-9_-]{11})",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, url)
-        if match:
-            return match.group(1)
-    return ""
 
 
 # ---------------------------------------------------------------------------
@@ -239,6 +233,10 @@ def update_metadata_with_analytics(
         if _apply_analytics_to_video(video, vid_id, analytics_data, refreshed_at):
             updated += 1
 
+        # Ensure video_id is stored
+        if "video_id" not in video or not video["video_id"]:
+            video["video_id"] = vid_id
+
         if vid_id in transcripts:
             video["transcript"] = transcripts[vid_id]
 
@@ -251,48 +249,65 @@ def build_metadata_from_all_videos(
     analytics_data: dict[str, dict[str, int | float]],
     existing_metadata: list[dict[str, Any]],
     transcripts: dict[str, str] | None = None,
+    video_details: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Build full metadata list from API videos + analytics, merging with existing.
 
-    Preserves tags and transcripts from existing metadata when available.
+    Preserves ALL fields from existing metadata (including yt-dlp enrichment
+    data like hashtags, chapters, resolution, etc.).
 
     Args:
         api_videos: Videos fetched from YouTube Data API.
         analytics_data: Per-video analytics data.
         existing_metadata: Current metadata.json contents.
         transcripts: Optional dict mapping video_id -> transcript text.
+        video_details: Optional dict from fetch_video_details (duration, tags, etc.).
 
     Returns:
         Complete metadata list sorted by views descending.
     """
     refreshed_at = datetime.now().isoformat()
     transcripts = transcripts or {}
+    video_details = video_details or {}
 
     # Index existing metadata by video ID for fast lookup
     existing_by_id: dict[str, dict[str, Any]] = {}
     for v in existing_metadata:
-        vid = _extract_video_id(v.get("url", ""))
+        vid = v.get("video_id") or _extract_video_id(v.get("url", ""))
         if vid:
             existing_by_id[vid] = v
 
     result: list[dict[str, Any]] = []
     for api_v in api_videos:
         vid = api_v["video_id"]
+
+        # Start with a copy of ALL existing fields to preserve enrichment data
         base = existing_by_id.get(vid, {})
+        entry: dict[str, Any] = base.copy()
 
-        entry: dict[str, Any] = {
-            "title": base.get("title") or api_v.get("title", ""),
-            "description": base.get("description") or api_v.get("description", ""),
-            "url": api_v.get("url", f"https://www.youtube.com/watch?v={vid}"),
-            "published_at": api_v.get("published_at", base.get("published_at", "")),
-        }
+        # Overlay core fields from API (always take latest from API)
+        entry["video_id"] = vid
+        entry["title"] = api_v.get("title") or entry.get("title", "")
+        entry["description"] = api_v.get("description") or entry.get("description", "")
+        entry["url"] = api_v.get("url", f"https://www.youtube.com/watch?v={vid}")
+        entry["published_at"] = api_v.get("published_at") or entry.get("published_at", "")
 
-        # Preserve tags from existing
-        if "tags" in base:
-            entry["tags"] = base["tags"]
+        # Merge video details from videos.list (duration, tags, thumbnail, etc.)
+        if vid in video_details:
+            details = video_details[vid]
+            for key, value in details.items():
+                # Only overlay if we got a non-empty value from Data API
+                if value or key not in entry:
+                    entry[key] = value
+            # Tags: prefer existing if present (user may have curated them)
+            if base.get("tags"):
+                entry["tags"] = base["tags"]
 
         # Transcript: prefer freshly fetched, else existing
-        entry["transcript"] = transcripts.get(vid) or base.get("transcript", "")
+        if vid in transcripts:
+            entry["transcript"] = transcripts[vid]
+        elif "transcript" not in entry:
+            entry["transcript"] = ""
 
         _apply_analytics_to_video(entry, vid, analytics_data, refreshed_at)
         entry["last_refreshed"] = refreshed_at

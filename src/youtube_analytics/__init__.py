@@ -10,11 +10,15 @@ Usage:
 
 from youtube_analytics.analyzer import compute_insights, compute_summary, rank_videos
 from youtube_analytics.exporter import export_channel_snapshot, export_for_ideation
-from youtube_analytics.fetcher import (
+from youtube_analytics.fetcher_competitor import (
+    fetch_competitor_channel_info,
+    fetch_competitor_videos,
+)
+from youtube_analytics.fetcher_own import (
     fetch_all_channel_videos,
     fetch_analytics_per_video,
     fetch_channel_level_analytics,
-    fetch_competitor_videos,
+    fetch_video_details,
 )
 from youtube_analytics.models import (
     ChannelAnalytics,
@@ -31,31 +35,37 @@ from youtube_analytics.storage import (
     save_channel_info,
     save_metadata,
 )
+from youtube_analytics.utils import extract_video_id
 
 __all__ = [
-    # Models
-    "VideoMetrics",
-    "ChannelProfile",
     "ChannelAnalytics",
+    "ChannelProfile",
     "ChannelSummary",
     "CompetitorVideo",
-    # Fetcher
-    "fetch_all_channel_videos",
-    "fetch_analytics_per_video",
-    "fetch_channel_level_analytics",
-    "fetch_competitor_videos",
-    # Storage
-    "load_metadata",
-    "save_metadata",
-    "load_channel_analytics",
-    "save_channel_analytics",
-    "load_channel_info",
-    "save_channel_info",
+    # Models
+    "VideoMetrics",
+    "compute_insights",
     # Analyzer
     "compute_summary",
-    "compute_insights",
-    "rank_videos",
     # Exporter
     "export_channel_snapshot",
     "export_for_ideation",
+    # Utils
+    "extract_video_id",
+    # Fetcher — own channel
+    "fetch_all_channel_videos",
+    "fetch_analytics_per_video",
+    "fetch_channel_level_analytics",
+    # Fetcher — competitors
+    "fetch_competitor_channel_info",
+    "fetch_competitor_videos",
+    "fetch_video_details",
+    "load_channel_analytics",
+    "load_channel_info",
+    # Storage
+    "load_metadata",
+    "rank_videos",
+    "save_channel_analytics",
+    "save_channel_info",
+    "save_metadata",
 ]

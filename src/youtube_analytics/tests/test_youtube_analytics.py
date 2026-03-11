@@ -11,14 +11,16 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
-
-from youtube_analytics.analyzer import compare_with_competitors, compute_insights, compute_summary, rank_videos
+from youtube_analytics.analyzer import (
+    compare_with_competitors,
+    compute_insights,
+    compute_summary,
+    rank_videos,
+)
 from youtube_analytics.exporter import export_channel_snapshot, export_for_ideation
 from youtube_analytics.models import (
     ChannelAnalytics,
     ChannelProfile,
-    ChannelSummary,
     CompetitorVideo,
     VideoMetrics,
 )
@@ -32,7 +34,6 @@ from youtube_analytics.storage import (
     save_metadata,
     update_metadata_with_analytics,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -101,9 +102,21 @@ SAMPLE_CHANNEL_INFO = {
 SAMPLE_CHANNEL_ANALYTICS = {
     "last_refreshed": "2026-03-06T09:48:58.200934",
     "traffic_sources": [
-        {"insightTrafficSourceType": "SHORTS", "views": 21719956, "estimatedMinutesWatched": 5647254},
-        {"insightTrafficSourceType": "SUBSCRIBER", "views": 1880459, "estimatedMinutesWatched": 1147545},
-        {"insightTrafficSourceType": "YT_SEARCH", "views": 636031, "estimatedMinutesWatched": 155616},
+        {
+            "insightTrafficSourceType": "SHORTS",
+            "views": 21719956,
+            "estimatedMinutesWatched": 5647254,
+        },
+        {
+            "insightTrafficSourceType": "SUBSCRIBER",
+            "views": 1880459,
+            "estimatedMinutesWatched": 1147545,
+        },
+        {
+            "insightTrafficSourceType": "YT_SEARCH",
+            "views": 636031,
+            "estimatedMinutesWatched": 155616,
+        },
     ],
     "top_countries": [
         {"country": "IN", "views": 25432427, "subscribersGained": 55435},
@@ -259,6 +272,66 @@ class TestStorage:
         # Should be sorted by views descending
         assert result[0]["views"] >= result[1]["views"]
 
+    def test_build_metadata_preserves_enrichment_fields(self) -> None:
+        """Enrichment fields (hashtags, resolution, etc.) must survive re-sync."""
+        enriched_video = {
+            **SAMPLE_VIDEO_DICT,
+            "hashtags": ["health", "tips"],
+            "resolution": "1080p",
+            "chapters": [{"title": "Intro", "start_time": 0, "end_time": 30}],
+            "language": "te",
+        }
+        api_videos = [
+            {"video_id": "abc12345678", "title": "Video 1", "url": "https://youtube.com/watch?v=abc12345678"},
+        ]
+        analytics = {"abc12345678": {"views": 9999}}
+
+        result = build_metadata_from_all_videos(api_videos, analytics, [enriched_video])
+        assert len(result) == 1
+        entry = result[0]
+        # Enrichment fields must be preserved
+        assert entry["hashtags"] == ["health", "tips"]
+        assert entry["resolution"] == "1080p"
+        assert len(entry["chapters"]) == 1
+        assert entry["language"] == "te"
+        # Analytics must be updated
+        assert entry["views"] == 9999
+
+    def test_build_metadata_stores_video_id(self) -> None:
+        """video_id field must be stored in metadata entries."""
+        api_videos = [
+            {"video_id": "abc12345678", "title": "Video 1", "url": "https://youtube.com/watch?v=abc12345678"},
+        ]
+        analytics = {"abc12345678": {"views": 100}}
+
+        result = build_metadata_from_all_videos(api_videos, analytics, [])
+        assert result[0]["video_id"] == "abc12345678"
+
+    def test_build_metadata_merges_video_details(self) -> None:
+        """Data API video details should be merged into metadata."""
+        api_videos = [
+            {"video_id": "abc12345678", "title": "Video 1", "url": "https://youtube.com/watch?v=abc12345678"},
+        ]
+        analytics = {}
+        video_details = {
+            "abc12345678": {
+                "duration_seconds": 55,
+                "is_short": True,
+                "thumbnail": "https://example.com/thumb.jpg",
+                "tags": ["new_tag"],
+                "category": "22",
+            }
+        }
+
+        result = build_metadata_from_all_videos(
+            api_videos, analytics, [],
+            video_details=video_details,
+        )
+        assert result[0]["duration_seconds"] == 55
+        assert result[0]["is_short"] is True
+        assert result[0]["thumbnail"] == "https://example.com/thumb.jpg"
+        assert result[0]["category"] == "22"
+
 
 # ---------------------------------------------------------------------------
 # Analyzer tests
@@ -307,8 +380,16 @@ class TestAnalyzer:
     def test_compare_with_competitors(self) -> None:
         own = self._make_videos()
         comp_vids = [
-            CompetitorVideo(video_id="c1", title="Comp 1", view_count=5000, like_count=200, tags=["new_tag"]),
-            CompetitorVideo(video_id="c2", title="Comp 2", view_count=3000, like_count=100, tags=["health"]),
+            CompetitorVideo(
+                video_id="c1", title="Comp 1",
+                view_count=5000, like_count=200,
+                tags=["new_tag"],
+            ),
+            CompetitorVideo(
+                video_id="c2", title="Comp 2",
+                view_count=3000, like_count=100,
+                tags=["health"],
+            ),
         ]
         result = compare_with_competitors(own, {"competitor1": comp_vids})
         assert "own_channel" in result

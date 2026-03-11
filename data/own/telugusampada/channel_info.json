@@ -5,18 +5,17 @@
   "custom_url": "@telugu_sampada",
   "published_at": "2025-12-13T15:02:22.845271Z",
   "country": "IN",
-  "subscriber_count": 62900,
+  "subscriber_count": 64700,
   "hidden_subscriber_count": false,
-  "view_count": 30274497,
-  "video_count": 68,
+  "view_count": 32627475,
+  "video_count": 69,
   "keywords": "\"Telugu Sampada\" \"telugu health tips\" \"telugu samethalu\" \"telugu wisdom\" \"telugu shorts\" \"Telugu Sampada\" \"telugu health tips\" \"telugu samethalu\" \"telugu proverbs\" \"health tips in telugu\" \"telugu wisdom\" \"telugu shorts\" \"home remedies telugu\" \"ayurveda telugu\" \"superfoods telugu\" \"telugu kitchen tips\" \"telugu padyalu\" \"sumati satakam\" \"natural remedies\" \"weight loss telugu\" \"hair care telugu\" \"indian superfoods\" siridhanyalu \"telugu culture\" \"telugu facts\"",
   "topic_categories": [
+    "https://en.wikipedia.org/wiki/Knowledge",
     "https://en.wikipedia.org/wiki/Religion",
     "https://en.wikipedia.org/wiki/Entertainment",
     "https://en.wikipedia.org/wiki/Health",
-    "https://en.wikipedia.org/wiki/Society",
-    "https://en.wikipedia.org/wiki/Lifestyle_(sociology)",
-    "https://en.wikipedia.org/wiki/Knowledge"
+    "https://en.wikipedia.org/wiki/Lifestyle_(sociology)"
   ],
   "thumbnails": {
     "default": "https://yt3.ggpht.com/Qf-RINhxD3WjXqFfdMq-zLdMLgOmIAUnsn2tiipO6GWMmBimYqqn2DRHYjFvSa-VbonKklIsxw=s88-c-k-c0x00ffffff-no-rj",
@@ -29,5 +28,5 @@
   "made_for_kids": false,
   "self_declared_made_for_kids": false,
   "unsubscribed_trailer": "",
-  "last_refreshed": "2026-03-09T12:00:01.244673"
+  "last_refreshed": "2026-03-11T09:01:20.358684"
 }

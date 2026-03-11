@@ -1,13 +1,12 @@
 """
 CLI for YouTube Analytics module.
 
-Provides commands: sync, competitor, export, compare, insights.
+Provides commands: sync, competitor, export, compare, insights, enrich.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import sys
 from datetime import datetime
@@ -29,13 +28,14 @@ def _setup_logging(verbose: bool = False) -> None:
 def cmd_sync(args: argparse.Namespace) -> None:
     """Sync own channel: fetch videos, analytics, and channel info."""
     from youtube_analytics.auth import get_authenticated_services
-    from youtube_analytics.fetcher import (
+    from youtube_analytics.fetcher_own import (
         fetch_all_channel_videos,
         fetch_analytics_per_video,
         fetch_channel_level_analytics,
-        fetch_transcripts_for_videos,
+        fetch_video_details,
         get_channel_info,
     )
+    from youtube_analytics.fetcher_transcript import fetch_transcripts_for_videos
     from youtube_analytics.storage import (
         build_metadata_from_all_videos,
         load_metadata,
@@ -44,15 +44,16 @@ def cmd_sync(args: argparse.Namespace) -> None:
         save_metadata,
         update_metadata_with_analytics,
     )
+    from youtube_analytics.utils import extract_video_id
 
     channel_dir = Path(args.channel_dir)
     secrets_dir = Path(args.secrets_dir)
 
-    print(f"🔐 Authenticating with YouTube APIs...")
+    print("🔐 Authenticating with YouTube APIs...")
     analytics_service, youtube_service = get_authenticated_services(secrets_dir)
 
     # Get channel info
-    print(f"📡 Fetching channel info...")
+    print("📡 Fetching channel info...")
     title, start_date, uploads_playlist, channel_metadata = get_channel_info(youtube_service)
     channel_metadata["last_refreshed"] = datetime.now().isoformat()
     save_channel_info(channel_dir, channel_metadata)
@@ -65,13 +66,11 @@ def cmd_sync(args: argparse.Namespace) -> None:
             print("❌ No existing metadata.json found. Run without --analytics-only first.")
             return
 
-        from youtube_analytics.fetcher import get_video_id
-
-        video_ids = [get_video_id(v.get("url", "")) for v in existing]
+        video_ids = [extract_video_id(v.get("url", "")) for v in existing]
         video_ids = [vid for vid in video_ids if vid]
     else:
         # Fetch all videos from channel
-        print(f"📥 Fetching all channel videos...")
+        print("📥 Fetching all channel videos...")
         api_videos = fetch_all_channel_videos(youtube_service, uploads_playlist)
         video_ids = [v["video_id"] for v in api_videos]
         print(f"   Found {len(api_videos)} videos")
@@ -81,6 +80,13 @@ def cmd_sync(args: argparse.Namespace) -> None:
     analytics_data = fetch_analytics_per_video(analytics_service, video_ids, start_date)
     print(f"   Got analytics for {len(analytics_data)} videos")
 
+    # Fetch video details from Data API (duration, tags, thumbnail, etc.)
+    video_details: dict = {}
+    if not args.analytics_only:
+        print("🎬 Fetching video details (duration, tags, thumbnail)...")
+        video_details = fetch_video_details(youtube_service, video_ids)
+        print(f"   Got details for {len(video_details)} videos")
+
     # Fetch transcripts if requested
     transcripts: dict[str, str] = {}
     if args.fetch_transcripts:
@@ -88,9 +94,7 @@ def cmd_sync(args: argparse.Namespace) -> None:
         existing = load_metadata(channel_dir)
         existing_by_url = {}
         for v in existing:
-            from youtube_analytics.fetcher import get_video_id as _gvid
-
-            vid = _gvid(v.get("url", ""))
+            vid = extract_video_id(v.get("url", ""))
             if vid:
                 existing_by_url[vid] = v
 
@@ -105,7 +109,7 @@ def cmd_sync(args: argparse.Namespace) -> None:
             print(f"   Got {len(transcripts)} transcripts")
 
     # Fetch channel-level analytics
-    print(f"📈 Fetching channel-level analytics...")
+    print("📈 Fetching channel-level analytics...")
     channel_analytics = fetch_channel_level_analytics(
         analytics_service, start_date, channel_metadata
     )
@@ -118,7 +122,7 @@ def cmd_sync(args: argparse.Namespace) -> None:
     else:
         existing = load_metadata(channel_dir)
         full_metadata = build_metadata_from_all_videos(
-            api_videos, analytics_data, existing, transcripts
+            api_videos, analytics_data, existing, transcripts, video_details
         )
         save_metadata(channel_dir, full_metadata)
         print(f"✅ Saved {len(full_metadata)} videos to metadata.json")
@@ -129,12 +133,15 @@ def cmd_sync(args: argparse.Namespace) -> None:
 def cmd_competitor(args: argparse.Namespace) -> None:
     """Fetch competitor channel data."""
     from youtube_analytics.auth import get_youtube_client
-    from youtube_analytics.fetcher import fetch_competitor_channel_info, fetch_competitor_videos
+    from youtube_analytics.fetcher_competitor import (
+        fetch_competitor_channel_info,
+        fetch_competitor_videos,
+    )
     from youtube_analytics.storage import save_channel_info, save_metadata
 
     output_dir = Path(args.output_dir)
 
-    print(f"🔑 Connecting with API key...")
+    print("🔑 Connecting with API key...")
     youtube = get_youtube_client(args.api_key)
 
     print(f"📡 Fetching channel info for {args.channel_id}...")
@@ -180,7 +187,7 @@ def cmd_compare(args: argparse.Namespace) -> None:
     own_dir = Path(args.own)
     competitor_dirs = [Path(c) for c in args.competitors]
 
-    print(f"🔍 Generating competitive analysis...")
+    print("🔍 Generating competitive analysis...")
     content = export_for_ideation(own_dir, competitor_dirs)
 
     if args.output:
@@ -214,7 +221,11 @@ def cmd_insights(args: argparse.Namespace) -> None:
 
     print(f"\n📊 CHANNEL: {summary.channel_name}")
     print("=" * 60)
-    print(f"Videos: {summary.total_videos} (Shorts: {summary.total_shorts}, Long: {summary.total_long_form})")
+    print(
+        f"Videos: {summary.total_videos}"
+        f" (Shorts: {summary.total_shorts},"
+        f" Long: {summary.total_long_form})"
+    )
     print(f"Total views: {summary.total_views:,}")
     print(f"Watch time: {summary.watch_time_hours:,.1f} hours")
     print(f"Net subscribers: +{summary.net_subscribers:,}")
@@ -234,6 +245,40 @@ def cmd_insights(args: argparse.Namespace) -> None:
         elif isinstance(data, dict):
             for k, v in data.items():
                 print(f"  • {k}: {v}")
+
+
+def cmd_enrich(args: argparse.Namespace) -> None:
+    """Enrich existing metadata with yt-dlp data."""
+    from youtube_analytics.enricher import enrich_videos
+    from youtube_analytics.storage import load_metadata, save_metadata
+    from youtube_analytics.utils import extract_video_id
+
+    channel_dir = Path(args.channel_dir)
+    metadata = load_metadata(channel_dir)
+
+    if not metadata:
+        print(f"❌ No metadata.json found in {channel_dir}")
+        return
+
+    # Collect video IDs
+    video_ids = []
+    for v in metadata:
+        vid = v.get("video_id") or extract_video_id(v.get("url", ""))
+        if vid:
+            video_ids.append(vid)
+
+    if args.limit:
+        video_ids = video_ids[: args.limit]
+
+    print(f"🔍 Enriching {len(video_ids)} videos with yt-dlp metadata...")
+    enriched = enrich_videos(
+        video_ids,
+        metadata,
+        skip_enriched=not args.force,
+    )
+
+    save_metadata(channel_dir, enriched)
+    print("✅ Enrichment complete. Updated metadata.json")
 
 
 def main() -> None:
@@ -266,12 +311,24 @@ def main() -> None:
 
     # --- export ---
     export_parser = subparsers.add_parser("export", help="Export channel snapshot for LLM")
-    export_parser.add_argument("--channel-dir", required=True, help="Path to channel data directory")
-    export_parser.add_argument("--format", choices=["markdown", "json"], default="markdown",
-                               help="Output format (default: markdown)")
-    export_parser.add_argument("--top-n", type=int, default=10, help="Number of top videos (default: 10)")
-    export_parser.add_argument("--output", default=None, help="Output file path (prints to stdout if omitted)")
-    export_parser.set_defaults(func=cmd_export)
+    export_parser.add_argument(
+        "--channel-dir", required=True,
+        help="Path to channel data directory",
+    )
+    export_parser.add_argument(
+        "--format",
+        choices=["markdown", "json"],
+        default="markdown",
+        help="Output format (default: markdown)",
+    )
+    export_parser.add_argument(
+        "--top-n", type=int, default=10,
+        help="Number of top videos (default: 10)",
+    )
+    export_parser.add_argument(
+        "--output", default=None,
+        help="Output file path (prints to stdout if omitted)",
+    )
 
     # --- compare ---
     compare_parser = subparsers.add_parser("compare", help="Competitive analysis")
@@ -283,8 +340,23 @@ def main() -> None:
 
     # --- insights ---
     insights_parser = subparsers.add_parser("insights", help="Quick channel insights")
-    insights_parser.add_argument("--channel-dir", required=True, help="Path to channel data directory")
+    insights_parser.add_argument(
+        "--channel-dir", required=True,
+        help="Path to channel data directory",
+    )
     insights_parser.set_defaults(func=cmd_insights)
+
+    # --- enrich ---
+    enrich_parser = subparsers.add_parser("enrich", help="Enrich metadata with yt-dlp data")
+    enrich_parser.add_argument(
+        "--channel-dir", required=True,
+        help="Path to channel data directory",
+    )
+    enrich_parser.add_argument("--limit", type=int, default=None,
+                               help="Max number of videos to enrich (default: all)")
+    enrich_parser.add_argument("--force", action="store_true",
+                               help="Re-enrich even if already enriched")
+    enrich_parser.set_defaults(func=cmd_enrich)
 
     args = parser.parse_args()
     _setup_logging(args.verbose)
